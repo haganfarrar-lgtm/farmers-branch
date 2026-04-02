@@ -1161,7 +1161,7 @@ function LeadForm() {
   const [formData, setFormData] = React.useState({ name: '', phone: '', address: '', budget: '', message: '' });
   const [status, setStatus] = React.useState('idle');
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
     setStatus('sending');
     try {
@@ -1194,15 +1194,15 @@ function LeadForm() {
       <h3 className="text-2xl font-bold mb-1">Get Your Free Estimate</h3>
       <p className="opacity-70 mb-4">Fill out the form and we'll get back to you within 24 hours.</p>
       <input type="text" required placeholder="Full Name *" value={formData.name}
-        onChange={e => setFormData({...formData, name: e.target.value})}
+        onChange={(e: any) => setFormData({...formData, name: e.target.value})}
         className="w-full px-4 py-3 rounded-xl border border-white/20 bg-white/10 backdrop-blur focus:ring-2 focus:ring-white/30 outline-none transition placeholder-white/50 text-white" />
       <input type="tel" required placeholder="Phone Number *" value={formData.phone}
-        onChange={e => setFormData({...formData, phone: e.target.value})}
+        onChange={(e: any) => setFormData({...formData, phone: e.target.value})}
         className="w-full px-4 py-3 rounded-xl border border-white/20 bg-white/10 backdrop-blur focus:ring-2 focus:ring-white/30 outline-none transition placeholder-white/50 text-white" />
       <input type="text" required placeholder="Address *" value={formData.address}
-        onChange={e => setFormData({...formData, address: e.target.value})}
+        onChange={(e: any) => setFormData({...formData, address: e.target.value})}
         className="w-full px-4 py-3 rounded-xl border border-white/20 bg-white/10 backdrop-blur focus:ring-2 focus:ring-white/30 outline-none transition placeholder-white/50 text-white" />
-      <select required value={formData.budget} onChange={e => setFormData({...formData, budget: e.target.value})}
+      <select required value={formData.budget} onChange={(e: any) => setFormData({...formData, budget: e.target.value})}
         className="w-full px-4 py-3 rounded-xl border border-white/20 bg-white/10 backdrop-blur focus:ring-2 focus:ring-white/30 outline-none transition text-white">
         <option value="" className="text-black">Select Your Budget</option>
         <option value="Under $1,000" className="text-black">Under $1,000</option>
@@ -1214,7 +1214,7 @@ function LeadForm() {
         <option value="$10,000+" className="text-black">$10,000+</option>
       </select>
       <textarea rows={3} placeholder="Tell us about your project..." value={formData.message}
-        onChange={e => setFormData({...formData, message: e.target.value})}
+        onChange={(e: any) => setFormData({...formData, message: e.target.value})}
         className="w-full px-4 py-3 rounded-xl border border-white/20 bg-white/10 backdrop-blur focus:ring-2 focus:ring-white/30 outline-none transition placeholder-white/50 text-white resize-none" />
       <button type="submit" disabled={status === 'sending'}
         className="w-full py-4 bg-white text-stone-800 font-bold rounded-xl hover:bg-white/90 transition disabled:opacity-50 text-lg">
