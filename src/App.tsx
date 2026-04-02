@@ -1156,7 +1156,6 @@ const ServiceLocationPage = () => {
 
 // --- Main App ---
 
-export default 
 function LeadForm() {
   const [formData, setFormData] = React.useState({ name: '', phone: '', address: '', budget: '', message: '' });
   const [status, setStatus] = React.useState('idle');
@@ -1225,7 +1224,7 @@ function LeadForm() {
   );
 }
 
-function App() {
+export default function App() {
   return (
     <Router>
       <ScrollToTop />
