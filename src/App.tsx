@@ -604,24 +604,7 @@ const ContactSection = () => {
             </div>
           </div>
           <div id="lead-form" className="p-0 h-[700px] md:h-auto order-1 md:order-2">
-            {/* GHL Form Integration */}
-            <iframe
-              src="https://link.gohighlevel.com/widget/form/lid6V9CQCh38fTyxiQ1M"
-              style={{ width: '100%', height: '100%', border: 'none', borderRadius: '0' }}
-              id="inline-lid6V9CQCh38fTyxiQ1M" 
-              data-layout="{'id':'INLINE'}"
-              data-trigger-type="alwaysShow"
-              data-trigger-value=""
-              data-activation-type="alwaysActivated"
-              data-activation-value=""
-              data-deactivation-type="neverDeactivated"
-              data-deactivation-value=""
-              data-form-name="Farmers Branch Landscaping Lead Form"
-              data-height="700"
-              data-layout-iframe-id="inline-lid6V9CQCh38fTyxiQ1M"
-              data-form-id="lid6V9CQCh38fTyxiQ1M"
-              title="Farmers Branch Landscaping Lead Form"
-            ></iframe>
+            <LeadForm />
           </div>
         </div>
       </div>
@@ -1173,7 +1156,76 @@ const ServiceLocationPage = () => {
 
 // --- Main App ---
 
-export default function App() {
+export default 
+function LeadForm() {
+  const [formData, setFormData] = React.useState({ name: '', phone: '', address: '', budget: '', message: '' });
+  const [status, setStatus] = React.useState('idle');
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setStatus('sending');
+    try {
+      const res = await fetch('https://app.lowkly.com/api/webhooks/leads/q3fp5i6sogd', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: formData.name, phone: formData.phone, address: formData.address,
+          budget: formData.budget, message: formData.message,
+          source: window.location.hostname, sourceUrl: window.location.href,
+        }),
+      });
+      if (res.ok) { setStatus('success'); setFormData({ name: '', phone: '', address: '', budget: '', message: '' }); }
+      else setStatus('error');
+    } catch { setStatus('error'); }
+  };
+
+  if (status === 'success') return (
+    <div className="flex items-center justify-center p-8 min-h-[400px]">
+      <div className="text-center">
+        <div className="text-5xl mb-4">✅</div>
+        <h3 className="text-2xl font-bold mb-2">Thank You!</h3>
+        <p className="opacity-80">We've received your request and will be in touch shortly.</p>
+      </div>
+    </div>
+  );
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <h3 className="text-2xl font-bold mb-1">Get Your Free Estimate</h3>
+      <p className="opacity-70 mb-4">Fill out the form and we'll get back to you within 24 hours.</p>
+      <input type="text" required placeholder="Full Name *" value={formData.name}
+        onChange={e => setFormData({...formData, name: e.target.value})}
+        className="w-full px-4 py-3 rounded-xl border border-white/20 bg-white/10 backdrop-blur focus:ring-2 focus:ring-white/30 outline-none transition placeholder-white/50 text-white" />
+      <input type="tel" required placeholder="Phone Number *" value={formData.phone}
+        onChange={e => setFormData({...formData, phone: e.target.value})}
+        className="w-full px-4 py-3 rounded-xl border border-white/20 bg-white/10 backdrop-blur focus:ring-2 focus:ring-white/30 outline-none transition placeholder-white/50 text-white" />
+      <input type="text" required placeholder="Address *" value={formData.address}
+        onChange={e => setFormData({...formData, address: e.target.value})}
+        className="w-full px-4 py-3 rounded-xl border border-white/20 bg-white/10 backdrop-blur focus:ring-2 focus:ring-white/30 outline-none transition placeholder-white/50 text-white" />
+      <select required value={formData.budget} onChange={e => setFormData({...formData, budget: e.target.value})}
+        className="w-full px-4 py-3 rounded-xl border border-white/20 bg-white/10 backdrop-blur focus:ring-2 focus:ring-white/30 outline-none transition text-white">
+        <option value="" className="text-black">Select Your Budget</option>
+        <option value="Under $1,000" className="text-black">Under $1,000</option>
+        <option value="$1,000 - $2,000" className="text-black">$1,000 - $2,000</option>
+        <option value="$2,000 - $3,000" className="text-black">$2,000 - $3,000</option>
+        <option value="$3,000 - $4,000" className="text-black">$3,000 - $4,000</option>
+        <option value="$4,000 - $5,000" className="text-black">$4,000 - $5,000</option>
+        <option value="$5,000 - $10,000" className="text-black">$5,000 - $10,000</option>
+        <option value="$10,000+" className="text-black">$10,000+</option>
+      </select>
+      <textarea rows={3} placeholder="Tell us about your project..." value={formData.message}
+        onChange={e => setFormData({...formData, message: e.target.value})}
+        className="w-full px-4 py-3 rounded-xl border border-white/20 bg-white/10 backdrop-blur focus:ring-2 focus:ring-white/30 outline-none transition placeholder-white/50 text-white resize-none" />
+      <button type="submit" disabled={status === 'sending'}
+        className="w-full py-4 bg-white text-stone-800 font-bold rounded-xl hover:bg-white/90 transition disabled:opacity-50 text-lg">
+        {status === 'sending' ? 'Sending...' : 'Get My Free Estimate'}
+      </button>
+      {status === 'error' && <p className="text-red-300 text-sm text-center">Something went wrong. Please call us directly.</p>}
+    </form>
+  );
+}
+
+function App() {
   return (
     <Router>
       <ScrollToTop />
